@@ -1,0 +1,18 @@
+# cmake_minimum_required(VERSION 3.6)
+# project(NetCommon)
+# message("NetCommon Area...")
+# add_library(NetCommon net_common.hpp)
+
+# include(CheckCXXCompilerFlag)
+# CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
+# CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+# # 使用变量设置编译标志
+# if(COMPILER_SUPPORTS_CXX14)
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+# elseif(COMPILER_SUPPORTS_CXX0X)
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+# else()
+# message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
+# endif()
+# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/asio-1.18.1/include)
+# add_executable(Simple_exp SimpleExample.cpp)
