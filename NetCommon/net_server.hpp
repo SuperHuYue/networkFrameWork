@@ -102,7 +102,8 @@ namespace william{
                     );
 
             }
-            void Update(size_t nMaxMessages =  -1){
+            void Update(size_t nMaxMessages =  -1, bool bwait =false){
+                if(bwait)m_qMessageIn.wait();
                 size_t nMessageCount = 0;
                 while(nMessageCount < nMaxMessages && !m_qMessageIn.empty()){
                     // Grab the front message

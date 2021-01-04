@@ -1,47 +1,68 @@
 #include <iostream>
 #include "william_net.hpp"
-
-
-enum class CustomMsgtypes:uint32_t
+enum class CustomMsgTypes : uint32_t
 {
-    ServerAccept,
-    ServerDeny,
-    ServerPing,
-    MessageALL,
-    ServerMessage,
-};
-
-class CustomServer: public william::net::server_interface<CustomMsgtypes>{
-    public:
-    CustomServer(uint16_t port):william::net::server_interface<CustomMsgtypes>(port){
-
-    }
-
-    protected:
-    virtual bool OnClientConnect(std::shared_ptr<william::net::connection<CustomMsgtypes>>client){
-        return true;
-    }
-    // Called when a client appears to have disconnected
-    virtual void OnClientDisconnect(std::shared_ptr<william::net::connection<CustomMsgtypes>> client){
-
-    }
-    // Called when a message arrives
-    virtual void OnMessage(std::shared_ptr<william::net::connection<CustomMsgtypes>>client, william::net::message<CustomMsgtypes>msg){
-
-    }
-
+	ServerAccept,
+	ServerDeny,
+	ServerPing,
+	MessageAll,
+	ServerMessage,
 };
 
 
-int main(){
-    CustomServer server(60000);
-    server.start();
-    while (1)
-    {
-        server.Update();
-    }
-    return 0;
-    
 
+class CustomServer : public william::net::server_interface<CustomMsgTypes>
+{
+public:
+	CustomServer(uint16_t nPort) : william::net::server_interface<CustomMsgTypes>(nPort)
+	{
+
+	}
+
+protected:
+	virtual bool OnClientConnect(std::shared_ptr<william::net::connection<CustomMsgTypes>> client)
+	{
+		william::net::message<CustomMsgTypes> msg;
+		msg.header.id = CustomMsgTypes::ServerAccept;
+		client->Send(msg);
+		return true;
+	}
+
+	// Called when a client appears to have disconnected
+	virtual void OnClientDisconnect(std::shared_ptr<william::net::connection<CustomMsgTypes>> client)
+	{
+		std::cout << "Removing client [" << client->GetID() << "]\n";
+	}
+
+	// Called when a message arrives
+	virtual void OnMessage(std::shared_ptr<william::net::connection<CustomMsgTypes>> client, william::net::message<CustomMsgTypes>& msg)
+	{
+		switch (msg.header.id)
+		{
+		case CustomMsgTypes::ServerPing:
+		{
+			std::cout << "[" << client->GetID() << "]: Server Ping\n";
+
+			// Simply bounce message back to client
+			client->Send(msg);
+		}
+		break;
+        default:
+        break;
+		}
+	}
+};
+
+int main()
+{
+	CustomServer server(60000); 
+	server.start();
+	while (1)
+	{
+		server.Update(-1,false);
+	}
+	
+
+
+	return 0;
 }
-
