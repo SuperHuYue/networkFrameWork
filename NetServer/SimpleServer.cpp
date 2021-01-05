@@ -7,6 +7,7 @@ enum class CustomMsgTypes : uint32_t
 	ServerPing,
 	MessageAll,
 	ServerMessage,
+	ServerPong
 };
 
 
@@ -41,9 +42,15 @@ protected:
 		{
 		case CustomMsgTypes::ServerPing:
 		{
-			std::cout << "[" << client->GetID() << "]: Server Ping\n";
+			//std::cout << "[" << client->GetID() << "]: Server Ping\n";
 
 			// Simply bounce message back to client
+			client->Send(msg);
+		}
+		break;
+		case CustomMsgTypes::ServerPong:
+		{
+			//std::cout << "[ " << client->GetID() << "]:ServerPong\n";
 			client->Send(msg);
 		}
 		break;
@@ -59,7 +66,7 @@ int main()
 	server.start();
 	while (1)
 	{
-		server.Update(-1,false);
+		server.Update(-1,true);
 	}
 	
 

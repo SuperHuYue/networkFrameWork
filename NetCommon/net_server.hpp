@@ -56,6 +56,7 @@ namespace william{
                                 m_deqConnections.push_back(std::move(newconn));
                                 m_deqConnections.back()->ConnectToClient(nIDCounter++);
                                 std::cout << "[" << m_deqConnections.back()->GetID()<<"] Connection Approved\n";
+                                WaitForClientConnection();
                             }
                             else{
                                 std::cout << "[-----] Connection Denied\n";

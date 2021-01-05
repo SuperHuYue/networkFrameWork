@@ -7,6 +7,7 @@ enum class CustomMsgTypes : uint32_t
 	ServerPing,
 	MessageAll,
 	ServerMessage,
+	ServerPong
 };
 
 
@@ -25,6 +26,12 @@ public:
 		msg << timeNow;
 		Send(msg);
 	}
+	void PongServer() {
+		william::net::message<CustomMsgTypes>msg;
+		msg.header.id = CustomMsgTypes::ServerPong;
+		// Caution with this...
+		Send(msg);
+	}
 
 	void MessageAll()
 	{
@@ -39,20 +46,14 @@ int main()
 	CustomClient c;
 	c.Connect("127.0.0.1", 60000);
 	bool bQuit = false;
+	int a = 1;
 	while (!bQuit)
 	{
-		 c.PingServer();
-		// if (key[1] && !old_key[1]) c.MessageAll();
-		// if (key[2] && !old_key[2]) bQuit = true;
-
-		// for (int i = 0; i < 3; i++) old_key[i] = key[i];
-
+		c.PongServer();//在段话在release中会卡顿，原因是超速的push_msg导致tsqueue一直被锁住，消息 无法被write出去，下次找时间进行优化处理
 		if (c.IsConnected())
 		{
 			if (!c.Incoming().empty())
 			{
-
-
 				auto msg = c.Incoming().pop_front().msg;
 
 				switch (msg.header.id)
@@ -82,6 +83,11 @@ int main()
 					msg >> clientID;
 					std::cout << "Hello from [" << clientID << "]\n";
 				}
+				case CustomMsgTypes::ServerPong:
+				{
+					std::cout << "Server Pong...\n";
+				}
+
                 break;
                 default:
 				break;
