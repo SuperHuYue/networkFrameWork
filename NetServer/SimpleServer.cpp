@@ -54,6 +54,11 @@ protected:
 			client->Send(msg);
 		}
 		break;
+		case CustomMsgTypes::MessageAll:
+		{
+			MessageAllClients(msg);
+		}
+		break;
         default:
         break;
 		}
@@ -69,7 +74,5 @@ int main()
 		server.Update(-1,true);
 	}
 	
-
-
 	return 0;
 }

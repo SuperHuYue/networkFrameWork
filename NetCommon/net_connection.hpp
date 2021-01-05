@@ -101,11 +101,9 @@ namespace william
 						// message at the front of the queue.
 						bool bWritingMessage = !m_qMessagesOut.empty();
 						m_qMessagesOut.push_back(msg);
-						std::cout << "msg_out size: " << m_qMessagesOut.count() << "\n";
 						if (!bWritingMessage)
 						{
 							WriteHeader();
-							std::cout << "giv\n";
 						}
 					});
 			}
